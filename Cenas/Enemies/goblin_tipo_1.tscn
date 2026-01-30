@@ -328,7 +328,7 @@ animations = [{
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_whd6n"]
-size = Vector2(41, 86)
+size = Vector2(28.5, 76)
 
 [node name="goblin_tipo_1" type="Node2D"]
 
@@ -341,5 +341,5 @@ sprite_frames = SubResource("SpriteFrames_mip0e")
 animation = &"walk_right"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="goblin"]
-position = Vector2(1.5, -13)
+position = Vector2(1.75, -8)
 shape = SubResource("RectangleShape2D_whd6n")
