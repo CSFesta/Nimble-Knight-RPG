@@ -1,9 +1,13 @@
-[gd_scene load_steps=3 format=3 uid="uid://n6682o4e348o"]
+[gd_scene load_steps=4 format=3 uid="uid://n6682o4e348o"]
 
 [ext_resource type="PackedScene" uid="uid://58rl8th1sw0c" path="res://Cenas/Player/player.tscn" id="1_eqpsd"]
+[ext_resource type="PackedScene" uid="uid://qjtwh23t25hp" path="res://dungeon.tscn" id="1_sutly"]
 [ext_resource type="PackedScene" uid="uid://cnq0yldw7lenx" path="res://Cenas/Systems/spawner.tscn" id="2_u8yni"]
 
 [node name="Mundo" type="Node2D"]
+
+[node name="Dungeon" parent="." instance=ExtResource("1_sutly")]
+position = Vector2(-22, 7)
 
 [node name="player" parent="." instance=ExtResource("1_eqpsd")]
 

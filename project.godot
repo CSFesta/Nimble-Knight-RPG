@@ -8,11 +8,20 @@
 
 config_version=5
 
+[accessibility]
+
+general/updates_per_second=90
+
 [application]
 
 config/name="JogoTeste"
 run/main_scene="res://Cenas/Player/player.tscn"
 config/features=PackedStringArray("4.5", "Forward Plus")
+
+[display]
+
+window/size/viewport_width=1280
+window/size/viewport_height=720
 
 [input]
 
