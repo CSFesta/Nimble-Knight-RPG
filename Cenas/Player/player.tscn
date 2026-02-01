@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cis8cnyls12gv" path="res://assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Run.png" id="6_3pxsn"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vi0ms"]
-radius = 22.0
+radius = 22.022715
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_byxcs"]
 atlas = ExtResource("2_h5gq4")
@@ -243,7 +243,8 @@ script = ExtResource("1_vi0ms")
 shape = SubResource("CircleShape2D_vi0ms")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player"]
-scale = Vector2(0.5, 0.5)
+position = Vector2(7.6293945e-06, 0)
+scale = Vector2(0.75, 0.731)
 sprite_frames = SubResource("SpriteFrames_2j41s")
 animation = &"strong_attack"
 autoplay = "idle"

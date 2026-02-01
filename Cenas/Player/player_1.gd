@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 # ---------------- CONST ----------------
-const SPEED = 150.0
+const SPEED = 75.0
 const ATTACK_TIME = 0.5
 const STRONG_ATTACK_TIME = 0.8
 

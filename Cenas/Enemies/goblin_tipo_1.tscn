@@ -336,8 +336,8 @@ size = Vector2(20, 40)
 script = ExtResource("1_3ib3e")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="goblin"]
-position = Vector2(0, -3.8146973e-06)
-scale = Vector2(-1.557451, 1.4556261)
+position = Vector2(2.3841858e-07, 0)
+scale = Vector2(-1.6719588, 1.5800912)
 sprite_frames = SubResource("SpriteFrames_mip0e")
 animation = &"walk_right"
 
