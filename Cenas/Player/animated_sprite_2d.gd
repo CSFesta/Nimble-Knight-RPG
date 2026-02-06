@@ -1,29 +1,33 @@
 extends AnimatedSprite2D
-class_name CharacterTexture
+class_name BodyTexture
 
-var current_state := "idle"
+var current_anim := ""
 
 func update_animation(state: String, velocity: Vector2) -> void:
-	# Flip horizontal 
+	# Flip horizontal
 	if velocity.x > 0:
 		flip_h = false
 	elif velocity.x < 0:
 		flip_h = true
 
-	# Evita tocar a mesma animação toda frame
-	if current_state == state:
-		return
-
-	current_state = state
+	var next_anim := ""
 
 	match state:
 		"idle":
-			play("idle")
+			next_anim = "idle"
 		"walk":
-			play("walk")
-		"attack":
-			play("attack")
-		"strong_attack":
-			play("strong_attack")
+			next_anim = "walk"
 		"guard":
-			play("guard")
+			next_anim = "guard"
+		"attack":
+			next_anim = "attack"
+		"strong_attack":
+			next_anim = "strong_attack"
+		_:
+			next_anim = "idle"
+
+	if current_anim == next_anim:
+		return
+
+	current_anim = next_anim
+	play(current_anim)

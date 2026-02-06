@@ -237,18 +237,18 @@ animations = [{
 
 [node name="player" type="Node2D"]
 
-[node name="player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("body_texture")]
+[node name="player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("character_texture")]
 script = ExtResource("1_vi0ms")
-body_texture = NodePath("BodySprite")
+character_texture = NodePath("AnimatedSprite2D")
 
 [node name="body" type="CollisionShape2D" parent="player"]
 shape = SubResource("CircleShape2D_vi0ms")
 
-[node name="BodySprite" type="AnimatedSprite2D" parent="player"]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="player"]
 position = Vector2(7.6293945e-06, 0)
 scale = Vector2(0.75, 0.731)
 sprite_frames = SubResource("SpriteFrames_2j41s")
-animation = &"guard"
+animation = &"idle"
 autoplay = "idle"
 script = ExtResource("7_qr1ky")
 

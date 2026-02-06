@@ -1,13 +1,15 @@
 extends CharacterBody2D
 
 # ---------------- CONST ----------------
-const SPEED = 75.0
-const ATTACK_TIME = 0.5
-const STRONG_ATTACK_TIME = 0.8
+const BASE_SPEED := 75.0
+const ATTACK_TIME := 0.5
+const STRONG_ATTACK_TIME := 0.8
+
+# ---------------- VAR ----------------
+var speed := BASE_SPEED
 
 # ---------------- NODES ----------------
-@export_category("Objects")
-@export var character_texture: CharacterTexture
+@export var body_texture: BodyTexture
 
 # ---------------- ESTADO ----------------
 var state := "idle"
@@ -15,14 +17,9 @@ var is_attacking := false
 var is_guarding := false
 var attack_timer := 0.0
 
-# ---------------- READY ----------------
-func _ready() -> void:
-	add_to_group("player")
-	global_position = Vector2.ZERO
-
 # ---------------- PHYSICS PROCESS ----------------
 func _physics_process(delta: float) -> void:
-	# ---------------- ATAQUE ----------------
+	# -------- ATAQUE --------
 	if is_attacking:
 		attack_timer -= delta
 		if attack_timer <= 0:
@@ -31,21 +28,20 @@ func _physics_process(delta: float) -> void:
 		else:
 			velocity = Vector2.ZERO
 			move_and_slide()
-			character_texture.update_animation(state, velocity)
+			update_visuals()
 			return
 
-	# ---------------- GUARDA ----------------
-	if is_guarding:
-		if not Input.is_action_pressed("guard"):
-			is_guarding = false
-			state = "idle"
-		else:
-			velocity = Vector2.ZERO
-			move_and_slide()
-			character_texture.update_animation(state, velocity)
-			return
+	# -------- GUARD (TRAVA MOVIMENTO) --------
+	if Input.is_action_pressed("guard"):
+		start_guard()
+		velocity = Vector2.ZERO
+		move_and_slide()
+		update_visuals()
+		return
+	else:
+		stop_guard()
 
-	# ---------------- MOVIMENTO ----------------
+	# -------- MOVIMENTO NORMAL --------
 	var direction := Input.get_vector(
 		"ui_left",
 		"ui_right",
@@ -53,21 +49,19 @@ func _physics_process(delta: float) -> void:
 		"ui_down"
 	)
 
-	velocity = direction * SPEED
+	velocity = direction * speed
 	move_and_slide()
 
-	# ---------------- INPUT ----------------
+	state = "walk" if direction != Vector2.ZERO else "idle"
+
+	# -------- ATAQUE --------
 	if Input.is_action_just_pressed("attack"):
 		start_attack("attack", ATTACK_TIME)
 	elif Input.is_action_just_pressed("strong_attack"):
 		start_attack("strong_attack", STRONG_ATTACK_TIME)
-	elif Input.is_action_pressed("guard"):
-		start_guard()
-	else:
-		state = "walk" if direction != Vector2.ZERO else "idle"
 
-	# ---------------- ATUALIZA ANIMAÇÃO ----------------
-	character_texture.update_animation(state, velocity)
+	update_visuals()
+
 
 # ---------------- FUNÇÕES ----------------
 func start_attack(type: String, duration: float) -> void:
@@ -77,8 +71,21 @@ func start_attack(type: String, duration: float) -> void:
 	attack_timer = duration
 	state = type
 
+
 func start_guard() -> void:
-	if is_attacking:
+	if is_guarding:
 		return
 	is_guarding = true
 	state = "guard"
+
+
+func stop_guard() -> void:
+	if not is_guarding:
+		return
+	is_guarding = false
+	state = "idle"
+
+
+func update_visuals() -> void:
+	if body_texture:
+		body_texture.update_animation(state, velocity)
