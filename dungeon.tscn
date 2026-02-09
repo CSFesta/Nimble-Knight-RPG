@@ -435,7 +435,6 @@ custom_data_layer_0/type = 0
 sources/0 = SubResource("TileSetAtlasSource_vol8w")
 
 [node name="Dungeon" type="Node2D"]
-scale = Vector2(2.75, 2.75)
 metadata/_edit_horizontal_guides_ = [-200.0]
 
 [node name="black" type="TileMapLayer" parent="."]

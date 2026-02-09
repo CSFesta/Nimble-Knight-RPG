@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3 uid="uid://58rl8th1sw0c"]
+[gd_scene load_steps=41 format=3 uid="uid://58rl8th1sw0c"]
 
 [ext_resource type="Script" uid="uid://n4q2pswna0wm" path="res://Cenas/Player/player_1.gd" id="1_vi0ms"]
 [ext_resource type="Texture2D" uid="uid://uv1e1jgbh8r3" path="res://assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Idle.png" id="2_byxcs"]
@@ -7,9 +7,11 @@
 [ext_resource type="Texture2D" uid="uid://bt3lf4c0a148x" path="res://assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Attack2.png" id="5_pil6n"]
 [ext_resource type="Texture2D" uid="uid://cis8cnyls12gv" path="res://assets/Tiny Swords (Free Pack)/Tiny Swords (Free Pack)/Units/Black Units/Warrior/Warrior_Run.png" id="6_3pxsn"]
 [ext_resource type="Script" uid="uid://2bii5scenout" path="res://Cenas/Player/animated_sprite_2d.gd" id="7_qr1ky"]
+[ext_resource type="Script" uid="uid://bqdo7sitbpdih" path="res://Cenas/Player/health.gd" id="8_r5b4r"]
+[ext_resource type="Script" uid="uid://baqxksunepu5k" path="res://Cenas/Player/hitbox.gd" id="9_s5ecj"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vi0ms"]
-radius = 22.022715
+radius = 13.038404
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_byxcs"]
 atlas = ExtResource("2_h5gq4")
@@ -235,6 +237,10 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5rwkh"]
+radius = 187.0
+height = 374.0
+
 [node name="player" type="Node2D"]
 
 [node name="player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("body_texture")]
@@ -248,7 +254,7 @@ shape = SubResource("CircleShape2D_vi0ms")
 position = Vector2(7.6293945e-06, 0)
 scale = Vector2(0.75, 0.731)
 sprite_frames = SubResource("SpriteFrames_2j41s")
-animation = &"guard"
+animation = &"attack"
 autoplay = "idle"
 script = ExtResource("7_qr1ky")
 
@@ -256,3 +262,14 @@ script = ExtResource("7_qr1ky")
 zoom = Vector2(3, 3)
 position_smoothing_enabled = true
 position_smoothing_speed = 1.0
+
+[node name="Health" type="Node2D" parent="player"]
+script = ExtResource("8_r5b4r")
+
+[node name="Hitbox" type="Area2D" parent="player"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("9_s5ecj")
+
+[node name="collisionDamage" type="CollisionShape2D" parent="player/Hitbox"]
+shape = SubResource("CapsuleShape2D_5rwkh")

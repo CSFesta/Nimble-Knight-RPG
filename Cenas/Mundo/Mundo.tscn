@@ -8,6 +8,7 @@
 
 [node name="Dungeon" parent="." instance=ExtResource("1_sutly")]
 position = Vector2(-22, 7)
+scale = Vector2(2.75, 2.75)
 
 [node name="player" parent="." instance=ExtResource("1_eqpsd")]
 

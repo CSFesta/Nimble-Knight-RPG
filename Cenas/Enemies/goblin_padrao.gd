@@ -1,19 +1,22 @@
 extends CharacterBody2D
 
 @export var speed: float = 40.0
-var player: Node2D = null 
-@onready var sprite = $AnimatedSprite2D 
 
-var last_direction = "front"
+@onready var health = $Health
+@onready var sprite = $AnimatedSprite2D
 
-# DICIONÁRIO CORRIGIDO:
-# Vector2.LEFT (-1, 0) agora mapeia corretamente para "left"
+var player: Node2D = null
+var last_direction := "front"
+
 var directions = {
 	Vector2.DOWN: "front",
 	Vector2.UP: "back",
-	Vector2.LEFT: "left",   # Se continuar trocado, inverta estas duas strings:
-	Vector2.RIGHT: "right"  # Troque "left" por "right" aqui se necessário
+	Vector2.LEFT: "left",
+	Vector2.RIGHT: "right"
 }
+
+func _ready() -> void:
+	health.died.connect(on_died)
 
 func _physics_process(_delta: float) -> void:
 	if is_instance_valid(player):
@@ -29,11 +32,10 @@ func _physics_process(_delta: float) -> void:
 func update_sprite_animation(dir: Vector2) -> void:
 	if dir.length() > 0.1:
 		var best_match = last_direction
-		var max_dot = -2.0 # Valor inicial bem baixo para comparação
+		var max_dot = -2.0
 		
-		# O loop 'for' percorre o dicionário e acha a direção correta
 		for vec in directions.keys():
-			var dot_product = dir.dot(vec) 
+			var dot_product = dir.dot(vec)
 			if dot_product > max_dot:
 				max_dot = dot_product
 				best_match = directions[vec]
@@ -42,3 +44,11 @@ func update_sprite_animation(dir: Vector2) -> void:
 		sprite.play("walk_" + last_direction)
 	else:
 		sprite.play("idle_" + last_direction)
+
+func take_damage(amount: int) -> void:
+	print("Goblin levou dano:", amount)
+	health.take_damage(amount)
+
+func on_died() -> void:
+	print("Goblin morreu")
+	queue_free()
