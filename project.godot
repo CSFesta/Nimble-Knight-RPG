@@ -23,6 +23,10 @@ config/features=PackedStringArray("4.5", "Forward Plus")
 window/size/viewport_width=2160
 window/size/viewport_height=1440
 
+[global_group]
+
+player_attack=""
+
 [input]
 
 ui_left={

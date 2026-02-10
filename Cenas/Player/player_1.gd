@@ -12,8 +12,7 @@ var speed := BASE_SPEED
 @export var body_texture: BodyTexture
 @onready var health = $Health
 @onready var hitbox: Area2D = $Hitbox
-@onready var hitbox_collision: CollisionShape2D = $Hitbox/CollisionShape2D
-
+@onready var hitbox_collision: CollisionShape2D = $Hitbox/collisionDamage
 # ---------------- ESTADO ----------------
 var state := "idle"
 var is_attacking := false

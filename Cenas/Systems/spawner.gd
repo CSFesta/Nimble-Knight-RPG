@@ -2,7 +2,7 @@ extends Node2D
 
 @export var goblin_scene: PackedScene
 @export var spawn_distance: float = 100.0
-@export var max_mobs: int = 20
+@export var max_mobs: int = 5
 
 @onready var timer: Timer = $Timer
 
