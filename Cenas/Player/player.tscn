@@ -238,8 +238,8 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_5rwkh"]
-radius = 187.0
-height = 374.0
+radius = 28.0
+height = 68.0
 
 [node name="player" type="Node2D"]
 
@@ -254,7 +254,7 @@ shape = SubResource("CircleShape2D_vi0ms")
 position = Vector2(7.6293945e-06, 0)
 scale = Vector2(0.75, 0.731)
 sprite_frames = SubResource("SpriteFrames_2j41s")
-animation = &"attack"
+animation = &"walk"
 autoplay = "idle"
 script = ExtResource("7_qr1ky")
 
@@ -273,4 +273,5 @@ monitoring = false
 script = ExtResource("9_s5ecj")
 
 [node name="collisionDamage" type="CollisionShape2D" parent="player/Hitbox"]
+position = Vector2(17, 0)
 shape = SubResource("CapsuleShape2D_5rwkh")

@@ -20,13 +20,23 @@ var is_guarding := false
 var attack_timer := 0.0
 
 # ---------------- READY ----------------
+# ---------------- NODES ----------------
+#@export var body_texture: AnimatedSprite2D # Use o tipo padrão para garantir
+
+
+# ---------------- READY ----------------
 func _ready() -> void:
 	add_to_group("player")
-	health.died.connect(on_died)
+	if not health.died.is_connected(on_died):
+		health.died.connect(on_died)
 	
-	# GARANTIA: A hitbox começa totalmente desligada
+	# Reset de segurança
 	hitbox.monitoring = false
-	hitbox.monitorable = false 
+	hitbox.monitorable = false
+	
+	# Se você esqueceu de arrastar no inspetor, tentamos pegar via código:
+	if body_texture == null:
+		body_texture = $BodySprite
 
 # ---------------- PHYSICS PROCESS ----------------
 func _physics_process(delta: float) -> void:
@@ -72,6 +82,7 @@ func _physics_process(delta: float) -> void:
 func start_attack(type: String, duration: float) -> void:
 	if is_attacking or is_guarding:
 		return
+	
 
 	is_attacking = true
 	attack_timer = duration
@@ -102,18 +113,15 @@ func stop_guard() -> void:
 	state = "idle"
 
 # ---------------- VISUAIS ----------------
-
 func update_visuals() -> void:
-	if body_texture:
-		body_texture.update_animation(state, velocity)
 		
-		# AJUSTE DE DIREÇÃO DA HITBOX
-		# Faz a hitbox seguir o lado para onde o player está virado
-		if velocity.x > 0:
-			hitbox.scale.x = 1
-		elif velocity.x < 0:
-			hitbox.scale.x = -1
-
+	body_texture.update_animation(state, velocity)
+	
+	if body_texture.flip_h:
+		# Inverte apenas o X da hitbox, mantendo o Y em 1
+		hitbox.scale = Vector2(-1, 1)
+	else:
+		hitbox.scale = Vector2(1, 1)
 # ---------------- DANO E MORTE ----------------
 
 func take_damage(amount: int) -> void:
