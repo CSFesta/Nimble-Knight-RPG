@@ -53,14 +53,14 @@ func update_sprite_animation(dir: Vector2) -> void:
 # --- SISTEMA DE DANO ATUALIZADO ---
 
 func take_damage(amount: int) -> void:
-	if is_hurt: return # Evita múltiplos frames de dano seguidos
+	if is_hurt or health.life <= 0: 
+		return # Segurança extra: não leva dano se já estiver em animação de dor ou morto
 	
-	print("Goblin levou dano:", amount)
 	health.take_damage(amount)
 	
-	# Se ainda estiver vivo após o dano, toca a animação de "Hurt"
 	if health.life > 0:
 		play_hurt_animation()
+	# O die() já é chamado pelo sinal do componente Health, então não precisa aqui.
 
 func play_hurt_animation() -> void:
 	is_hurt = true

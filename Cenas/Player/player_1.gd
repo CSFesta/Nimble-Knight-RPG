@@ -9,10 +9,11 @@ const STRONG_ATTACK_TIME := 0.8
 var speed := BASE_SPEED
 
 # ---------------- NODES ----------------
-@export var body_texture: BodyTexture
+@export var body_texture: BodyTexture # Certifique-se de arrastar o BodySprite para cá no Inspector
 @onready var health = $Health
 @onready var hitbox: Area2D = $Hitbox
 @onready var hitbox_collision: CollisionShape2D = $Hitbox/collisionDamage
+
 # ---------------- ESTADO ----------------
 var state := "idle"
 var is_attacking := false
@@ -20,33 +21,29 @@ var is_guarding := false
 var attack_timer := 0.0
 
 # ---------------- READY ----------------
-# ---------------- NODES ----------------
-#@export var body_texture: AnimatedSprite2D # Use o tipo padrão para garantir
-
-
-# ---------------- READY ----------------
 func _ready() -> void:
 	add_to_group("player")
+	
+	# Conexão segura do sinal de morte
 	if not health.died.is_connected(on_died):
 		health.died.connect(on_died)
 	
-	# Reset de segurança
+	# Garante que a hitbox comece desligada
 	hitbox.monitoring = false
 	hitbox.monitorable = false
 	
-	# Se você esqueceu de arrastar no inspetor, tentamos pegar via código:
+	# Fallback caso a exportação falhe no Inspector
 	if body_texture == null:
 		body_texture = $BodySprite
 
 # ---------------- PHYSICS PROCESS ----------------
 func _physics_process(delta: float) -> void:
-	# -------- LÓGICA DE ATAQUE --------
+	# -------- LÓGICA DE ATAQUE (CONGELA MOVIMENTO) --------
 	if is_attacking:
 		attack_timer -= delta
 		if attack_timer <= 0:
-			stop_attack() # Função para limpar o estado de ataque
+			stop_attack()
 		else:
-			# Durante o ataque o player fica parado (opcional)
 			velocity = Vector2.ZERO
 			move_and_slide()
 			update_visuals()
@@ -82,23 +79,21 @@ func _physics_process(delta: float) -> void:
 func start_attack(type: String, duration: float) -> void:
 	if is_attacking or is_guarding:
 		return
-	
 
 	is_attacking = true
 	attack_timer = duration
 	state = type
 
-	# TORNA A HITBOX "VISÍVEL" PARA OS GOBLINS
-	hitbox.monitorable = true 
-	# Opcional: Ativar monitoring se a hitbox precisar detectar algo
-	# hitbox.monitoring = true 
+	# Ativa a detecção de colisão de forma segura
+	hitbox.set_deferred("monitoring", true)
+	hitbox.set_deferred("monitorable", true)
 
 func stop_attack() -> void:
 	is_attacking = false
 	state = "idle"
-	# TORNA A HITBOX "INVISÍVEL" NOVAMENTE
-	hitbox.monitorable = false 
-	# hitbox.monitoring = false
+	# Desativa a detecção de colisão
+	hitbox.set_deferred("monitoring", false)
+	hitbox.set_deferred("monitorable", false)
 
 func start_guard() -> void:
 	if is_guarding:
@@ -113,23 +108,28 @@ func stop_guard() -> void:
 	state = "idle"
 
 # ---------------- VISUAIS ----------------
+
 func update_visuals() -> void:
+	if body_texture == null:
+		return
 		
+	# 1. Atualiza animação e flip_h do Sprite
 	body_texture.update_animation(state, velocity)
 	
+	# 2. Sincroniza a posição da Hitbox com o olhar do Sprite
 	if body_texture.flip_h:
-		# Inverte apenas o X da hitbox, mantendo o Y em 1
+		# Se o sprite virou para a esquerda, inverte a escala da área de ataque
 		hitbox.scale = Vector2(-1, 1)
 	else:
+		# Caso contrário, escala padrão (direita)
 		hitbox.scale = Vector2(1, 1)
+
 # ---------------- DANO E MORTE ----------------
 
 func take_damage(amount: int) -> void:
 	if is_guarding:
-		# Aqui você poderia adicionar um som de "tink" ou faíscas
 		return
 	health.take_damage(amount)
 
 func on_died() -> void:
-	# Em vez de apenas deletar, você poderia tocar uma animação de morte aqui
 	queue_free()
