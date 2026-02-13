@@ -7,7 +7,7 @@ extends CharacterBody2D
 
 var player: Node2D = null
 var last_direction := "front"
-var is_hurt := false # Nova variável para controlar o estado de dor
+var is_hurt := false 
 
 var directions = {
 	Vector2.DOWN: "front",
@@ -20,8 +20,9 @@ func _ready() -> void:
 	health.died.connect(on_died)
 
 func _physics_process(_delta: float) -> void:
-	# Se estiver em estado de "dor", não processa movimento nem troca de animação
-	if is_hurt:
+	# AJUSTE CHAVE: Se estiver em estado de dor ou morto, sai da função imediatamente
+	# Isso impede que o velocity seja alterado e que sprite.play() de movimento rode
+	if is_hurt or health.life <= 0:
 		return
 
 	if is_instance_valid(player):
@@ -35,6 +36,7 @@ func _physics_process(_delta: float) -> void:
 		sprite.play("idle_" + last_direction)
 
 func update_sprite_animation(dir: Vector2) -> void:
+	# Esta função só é chamada se NÃO estiver em is_hurt, graças ao check no physics_process
 	if dir.length() > 0.1:
 		var best_match = last_direction
 		var max_dot = -2.0
@@ -50,40 +52,42 @@ func update_sprite_animation(dir: Vector2) -> void:
 	else:
 		sprite.play("idle_" + last_direction)
 
-# --- SISTEMA DE DANO ATUALIZADO ---
+# --- SISTEMA DE DANO E MORTE ---
 
 func take_damage(amount: int) -> void:
 	if is_hurt or health.life <= 0: 
-		return # Segurança extra: não leva dano se já estiver em animação de dor ou morto
+		return 
 	
 	health.take_damage(amount)
 	
 	if health.life > 0:
 		play_hurt_animation()
-	# O die() já é chamado pelo sinal do componente Health, então não precisa aqui.
 
 func play_hurt_animation() -> void:
 	is_hurt = true
-	velocity = Vector2.ZERO # Para o movimento
+	velocity = Vector2.ZERO # Garante que ele pare de deslizar
+	
 	sprite.play("hurt_" + last_direction)
 	
-	# Aguarda a animação acabar ou um tempo fixo (ex: 0.3 segundos)
-	await get_tree().create_timer(0.3).timeout
+	# O timer cria uma janela onde o _physics_process será ignorado
+	await get_tree().create_timer(0.333).timeout 
+	
 	is_hurt = false
 
 func on_died() -> void:
-	print("Goblin morreu e será removido")
-	
-	# 1. Desativa processamento para evitar que ele continue andando "invisível"
+	# Para tudo permanentemente
 	set_physics_process(false)
+	is_hurt = true 
 	
-	# 2. Desativa as colisões (Hurtbox e Corpo)
+	sprite.play("death_" + last_direction)
+	
+	# Desativa colisões para não travar o player
 	$Hurtbox.set_deferred("monitoring", false)
 	$Hurtbox.set_deferred("monitorable", false)
-	$CollisionShape2D.set_deferred("disabled", true) # Substitua pelo nome do seu CollisionShape do corpo
 	
-	# 3. Faz sumir visualmente
-	visible = false
-	
-	# 4. Deleta o objeto da memória
+	if has_node("CollisionShape2D"):
+		$CollisionShape2D.set_deferred("disabled", true) 
+
+	# Aguarda o tempo da animação de morte
+	await get_tree().create_timer(0.6).timeout
 	queue_free()
