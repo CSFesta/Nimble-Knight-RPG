@@ -26,6 +26,7 @@ window/size/viewport_height=1440
 [global_group]
 
 player_attack=""
+player=""
 
 [input]
 
