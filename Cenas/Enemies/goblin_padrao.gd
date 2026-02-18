@@ -66,21 +66,24 @@ func update_sprite_animation(dir: Vector2) -> void:
 func update_hitbox_position() -> void:
 	if not hitbox: return
 	
-	# Ajuste os valores de Vector2(x, y) abaixo conforme o tamanho do seu goblin
 	match last_direction:
 		"right":
-			hitbox.position = Vector2(15, 0)
+			# Direita padrão
+			hitbox.position = Vector2(18, 0)
 			hitbox.rotation_degrees = 0
 		"left":
-			hitbox.position = Vector2(-15, 0)
+			# Aumentei para -22 para compensar o erro que você notou
+			hitbox.position = Vector2(-30, 0)
 			hitbox.rotation_degrees = 0
 		"front":
-			hitbox.position = Vector2(0, 15)
-			hitbox.rotation_degrees = 90 # Rotaciona se a colisão for oval/retangular
-		"back":
-			hitbox.position = Vector2(0, -15)
+			# Baixo padrão
+			hitbox.position = Vector2(0, 18)
 			hitbox.rotation_degrees = 90
-
+		"back":
+			# Aumentei para -25 para subir bem a hitbox no ataque para cima
+			hitbox.position = Vector2(0, -40)
+			hitbox.rotation_degrees = 90
+			
 # --- LÓGICA DE ATAQUE ---
 func _on_attack_area_body_entered(body: Node2D) -> void:
 	# Só inicia se puder atacar, não estiver ocupado e o player for o alvo

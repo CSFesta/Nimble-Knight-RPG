@@ -1016,9 +1016,8 @@ size = Vector2(20, 40)
 radius = 16.0
 height = 64.0
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_i3ovu"]
-radius = 16.0
-height = 48.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_om7jo"]
+size = Vector2(37, 49)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_om7jo"]
 radius = 24.0
@@ -1056,14 +1055,13 @@ collision_layer = 16
 collision_mask = 0
 script = ExtResource("8_8xwwl")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="goblin/Hitbox"]
-position = Vector2(24, 0)
-shape = SubResource("CapsuleShape2D_i3ovu")
+[node name="CollisionShape2" type="CollisionShape2D" parent="goblin/Hitbox"]
+position = Vector2(13.5, -0.5)
+shape = SubResource("RectangleShape2D_om7jo")
 
 [node name="AttackArea" type="Area2D" parent="goblin"]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="goblin/AttackArea"]
-position = Vector2(0, -4)
 shape = SubResource("CapsuleShape2D_om7jo")
 
 [connection signal="area_entered" from="goblin/Hurtbox" to="goblin/Hurtbox" method="_on_area_entered"]
