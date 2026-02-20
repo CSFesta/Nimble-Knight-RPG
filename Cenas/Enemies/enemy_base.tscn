@@ -1,4 +1,6 @@
-[gd_scene format=3 uid="uid://7cfac4ymahg4"]
+[gd_scene load_steps=2 format=3 uid="uid://7cfac4ymahg4"]
+
+[ext_resource type="Script" uid="uid://dm7bijpp0emfp" path="res://Cenas/Enemies/health.gd" id="1_sdujw"]
 
 [node name="EnemyBase" type="Node2D"]
 
@@ -7,6 +9,7 @@
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 [node name="Health" type="Node2D" parent="."]
+script = ExtResource("1_sdujw")
 
 [node name="Hitbox" type="Area2D" parent="."]
 
